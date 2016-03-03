@@ -31,6 +31,7 @@ describe('LibAlpaca.readUserFile', () => {
       .readUserFile('user0')
       .then((userData) => {
         Chai.expect(userData).to.be.an.object;
+        Chai.expect(userData.uuid).to.be.a.string;
         done();
       })
       .catch((err) => {

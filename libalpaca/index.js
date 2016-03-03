@@ -52,6 +52,35 @@ export default class LibAlpaca {
   }
 
   /**
+   * @method getEncryptedUserDirectoryListing
+   */
+  getEncryptedUserDirectoryListing (username) {
+    return new Promise((resolve, reject) => {
+
+      this.readUserFile(username)
+        .then((userData) => {
+
+          this.getUserDirectoryListing(username)
+            .then((files) => {
+
+              const filesString = JSON.stringify(files);
+              const encryptedFilesString = CryptoJs.AES.encrypt(filesString, userData.uuid);
+              resolve(encryptedFilesString.toString());
+
+            })
+            .catch((err) => {
+              reject(err);
+            });
+
+        })
+        .catch((err) => {
+          reject(err);
+        });
+
+    });
+  }
+
+  /**
    * @method getUserDirectoryListing
    */
   getUserDirectoryListing (username) {
@@ -149,7 +178,7 @@ export default class LibAlpaca {
         else {
           try {
             var userData = new UserData(JSON.parse(fileContent));
-            resolve(UserData);
+            resolve(userData);
           }
           catch (e) {
             reject(e);
