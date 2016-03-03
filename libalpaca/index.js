@@ -1,8 +1,9 @@
-import * as CryptoJs from 'crypto-js';
-import * as Fs from 'fs';
-import * as Path from 'path';
-import * as Uuid from 'node-uuid';
-import * as Bluebird from 'bluebird';
+import CryptoJs from 'crypto-js';
+import Fs from 'fs';
+import Glob from 'glob'
+import Path from 'path';
+import Uuid from 'node-uuid';
+import Bluebird from 'bluebird';
 
 class UserData {
   constructor ({
@@ -43,11 +44,49 @@ export default class LibAlpaca {
   }
 
   /**
+   * @method _getUserDir
+   * @private
+   */
+  _getUserDir (username) {
+    return Path.join(this.config.dataDir, username);
+  }
+
+  /**
+   * @method getUserDirectoryListing
+   */
+  getUserDirectoryListing (username) {
+    return new Promise((resolve, reject) => {
+      var userDir = this._getUserDir(username);
+      Fs.exists(userDir, (exists) => {
+        if (!exists) {
+          reject(new Error(`User directory ${userDir} does not exist`));
+        }
+        else {
+          Glob(Path.join(userDir, '*.md*'), (err, files) => {
+            if (err) {
+              reject(err);
+            }
+            else {
+              resolve(files.map((file) => {
+                return {
+                  filename: file,
+                  title: Path.basename(file).slice(0, 0 - Path.extname(Path.basename(file)).length),
+                  encrypted: Path.extname(file).indexOf('encrypted') < 0 ? false : true
+                };
+              }));
+            }
+          });
+        }
+      });
+    });
+  }
+
+  /**
    * @method createUserDirectory
    */
   createUserDirectory (username) {
     return new Promise((resolve, reject) => {
-      const userDir = Path.join(this.config.dataDir, username);
+      const userDir = this._getUserDir(username);
       Fs.exists(userDir, (exists) => {
         if (exists) {
           reject(new Error(`User directory ${userDir} already exists.`));
