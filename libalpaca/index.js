@@ -49,10 +49,33 @@ export default class LibAlpaca {
       const fileContent = JSON.stringify(userData.toObject());
       Fs.writeFile(filePath, fileContent, 'utf8', (err) => {
         if (err) {
+          return reject(err);
+        }
+        else {
+          return resolve(userData);
+        }
+      });
+    });
+  }
+
+  /**
+   * @method readUserFile
+   */
+  readUserFile (username) {
+    return new Promise((resolve, reject) => {
+      const filePath = Path.join(this.config.dataDir, `${username}.user`);
+      Fs.readFile(filePath, 'r', (err, fileContent) => {
+        if (err) {
           reject(err);
         }
         else {
-          resolve(userData);
+          try {
+            var userData = new UserData(JSON.parse(fileContent));
+            resolve(UserData);
+          }
+          catch (e) {
+            return reject(e);
+          }
         }
       });
     });
