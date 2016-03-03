@@ -52,6 +52,23 @@ export default class LibAlpaca {
   }
 
   /**
+   * @method decryptUserDirectoryListing
+   */
+  decryptUserDirectoryListing (encryptedListing, encryptedUuid, hashedPassword) {
+    return new Promise((resolve, reject) => {
+      var uuid = CryptoJs.AES.decrypt(encryptedUuid, hashedPassword).toString(CryptoJs.enc.Utf8);
+      var listing = CryptoJs.AES.decrypt(encryptedListing, uuid).toString(CryptoJs.enc.Utf8);
+
+      try {
+        resolve(JSON.parse(listing));
+      }
+      catch (e) {
+        reject(e);
+      }
+    });
+  }
+
+  /**
    * @method getEncryptedUserDirectoryListing
    */
   getEncryptedUserDirectoryListing (username) {
@@ -138,13 +155,12 @@ export default class LibAlpaca {
    * @method createUserFile
    */
   createUserFile (username, hashedPassword) {
-    var uuid = Uuid.v4();
-    var userData = new UserData({
-      uuid: uuid,
-      encryptedUuid: CryptoJs.AES.encrypt(uuid, hashedPassword).toString()
-    });
-
     return new Promise((resolve, reject) => {
+      var uuid = Uuid.v4();
+      var userData = new UserData({
+        uuid: uuid,
+        encryptedUuid: CryptoJs.AES.encrypt(uuid, hashedPassword).toString()
+      });
       const filePath = Path.join(this.config.dataDir, `${username}.user`);
       const fileContent = JSON.stringify(userData.toObject());
       Fs.exists(filePath, (exists) => {
