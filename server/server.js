@@ -1,5 +1,6 @@
 import * as Hapi from 'hapi';
-import * as Good from 'good';
+
+import Routes from './routes';
 
 export default class Server {
   constructor (config) {
@@ -16,9 +17,16 @@ export default class Server {
     done();
   }
 
+  _registerRoutes (done) {
+    this.server.route(Routes);
+    done();
+  }
+
   init (done) {
     this._registerLoggers(() => {
-      done();
+      this._registerRoutes(() => {
+        done();
+      });
     });
   }
 
