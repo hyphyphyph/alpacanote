@@ -64,7 +64,7 @@ export default class LibAlpaca {
   readUserFile (username) {
     return new Promise((resolve, reject) => {
       const filePath = Path.join(this.config.dataDir, `${username}.user`);
-      Fs.readFile(filePath, 'r', (err, fileContent) => {
+      Fs.readFile(filePath, 'utf8', (err, fileContent) => {
         if (err) {
           reject(err);
         }
@@ -74,7 +74,7 @@ export default class LibAlpaca {
             resolve(UserData);
           }
           catch (e) {
-            return reject(e);
+            reject(e);
           }
         }
       });
