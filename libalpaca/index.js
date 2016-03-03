@@ -22,8 +22,16 @@ class UserData {
 }
 
 export default class LibAlpaca {
-  constructor (config) {
-    this.config = config;
+  constructor ({
+    dataDir = '',
+    salt = '',
+    pepper = ''
+  }) {
+    this.config = {
+      dataDir: dataDir,
+      salt: salt,
+      pepper: pepper
+    };
   }
 
   /**
@@ -32,6 +40,30 @@ export default class LibAlpaca {
    */
   _hashValue (value) {
     return CryptoJs.SHA1(`${this.config.salt}${value}${this.config.pepper}`);
+  }
+
+  /**
+   * @method createUserDirectory
+   */
+  createUserDirectory (username) {
+    return new Promise((resolve, reject) => {
+      const userDir = Path.join(this.config.dataDir, username);
+      Fs.exists(userDir, (exists) => {
+        if (exists) {
+          reject(new Error(`User directory ${userDir} already exists.`));
+        }
+        else {
+          Fs.mkdir(userDir, (err) => {
+            if (err) {
+              reject(err);
+            }
+            else {
+              resolve(userDir);
+            }
+          });
+        }
+      });
+    });
   }
 
   /**
@@ -47,12 +79,19 @@ export default class LibAlpaca {
     return new Promise((resolve, reject) => {
       const filePath = Path.join(this.config.dataDir, `${username}.user`);
       const fileContent = JSON.stringify(userData.toObject());
-      Fs.writeFile(filePath, fileContent, 'utf8', (err) => {
-        if (err) {
-          return reject(err);
+      Fs.exists(filePath, (exists) => {
+        if (exists) {
+          reject(new Error(`User file for ${username} already exists.`));
         }
         else {
-          return resolve(userData);
+          Fs.writeFile(filePath, fileContent, 'utf8', (err) => {
+            if (err) {
+              return reject(err);
+            }
+            else {
+              return resolve(userData);
+            }
+          });
         }
       });
     });

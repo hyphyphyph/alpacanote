@@ -1,5 +1,7 @@
 import Chai from 'chai';
+import Fs from 'fs';
 import LibAlpaca from '../index';
+import Path from 'path';
 
 describe('LibAlpaca.readUserFile', () => {
   const alpaca = new LibAlpaca({
@@ -18,6 +20,10 @@ describe('LibAlpaca.readUserFile', () => {
       .catch((err) => {
         done(err);
       });
+  });
+
+  after(() => {
+    Fs.unlinkSync(Path.join(alpaca.config.dataDir, 'user0.user'));
   });
 
   it('Should be able to readUserFile for user0', (done) => {
