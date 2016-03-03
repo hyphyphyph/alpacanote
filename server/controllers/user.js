@@ -12,12 +12,22 @@ export default class UserController extends BaseController {
     const username = request.payload.username;
     const hashedPassword = request.payload.hashedPassword;
 
-    new LibAlpaca(Config.LibAlpaca).createUserFile(username, hashedPassword)
+    const alpaca = new LibAlpaca(Config.LibAlpaca);
+
+    alpaca.createUserFile(username, hashedPassword)
       .then(() => {
-        reply({
-          statusCode: 200,
-          message: 'success'
-        });
+
+        alpaca.createUserDirectory(username)
+          .then(() => {
+            reply({
+              statusCode: 200,
+              message: 'success'
+            });
+          })
+          .catch((err) => {
+            reply(Boom.wrap(err, 500));
+          });
+
       })
       .catch(() => {
         reply(Boom.wrap(new Error('User already exists.'), 400));
