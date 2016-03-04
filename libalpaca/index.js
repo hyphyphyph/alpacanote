@@ -1,6 +1,7 @@
 import CryptoJs from 'crypto-js';
 import Fs from 'fs';
 import Glob from 'glob'
+import Kbpgp from 'kbpgp';
 import Path from 'path';
 import Uuid from 'node-uuid';
 import Bluebird from 'bluebird';
