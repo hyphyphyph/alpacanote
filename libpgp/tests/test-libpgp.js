@@ -2,7 +2,7 @@ import Chai from 'chai';
 import Fs from 'fs';
 import LibPgp from '../index';
 
-describe('LibPgp.generateKeys', () => {
+describe('LibPgp', () => {
   var publicKey;
   var privateKey;
   var encryptedMessage;
