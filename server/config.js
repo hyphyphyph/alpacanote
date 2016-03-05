@@ -3,6 +3,10 @@ const Config = {
     Hostname: '0.0.0.0',
     Port: 3000
   },
+  Key: {
+    PublicKeyFile: 'public.key',
+    PrivateKeyFile: 'private.key'
+  },
   LibAlpaca: {
     DataDir: 'data',
     Salt: 'salt',

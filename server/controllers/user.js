@@ -7,9 +7,6 @@ import LibPgp from '../../libpgp';
 
 export default class UserController extends BaseController {
 
-  /**
-   * @method registerNewUser
-   */
   registerNewUser (request, reply) {
     const username = request.payload.username;
     const encryptedPassword = request.payload.encryptedPassword;

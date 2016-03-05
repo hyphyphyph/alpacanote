@@ -5,9 +5,6 @@ import LibAlpaca from '../../libalpaca';
 
 export default class FileController extends BaseController {
 
-  /**
-   * @method getUserDirectoryListing
-   */
   getUserDirectoryListing (request, reply) {
     const username = request.params.username;
 
@@ -34,9 +31,6 @@ export default class FileController extends BaseController {
       });
   }
 
-  /**
-   * @method getFile
-   */
   getFile(request, reply) {
     const username = request.params.username;
     const filename = request.params.filename;

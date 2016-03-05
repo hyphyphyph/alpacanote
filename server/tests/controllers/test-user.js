@@ -2,6 +2,7 @@ import Chai from 'chai';
 import Config from '../../config';
 import Fs from 'fs';
 import KeyController from '../../controllers/key';
+import KeyLogic from '../../logic/key';
 import LibPgp from '../../../libpgp';
 import Path from 'path';
 import Server from '../../server';
@@ -9,6 +10,21 @@ import Server from '../../server';
 describe('UserController', () => {
   var server;
   var encryptedPassword
+
+  before(function (done) {
+    this.timeout(3600000);
+
+    new KeyLogic({
+      publicKeyFile: Config.Key.PublicKeyFile,
+      privateKeyFile: Config.Key.PrivateKeyFile
+    }).ensureKeyExists()
+      .then(() => {
+        done();
+      })
+      .catch((err) => {
+        done(err);
+      });
+  });
 
   before((done) => {
     server = new Server({

@@ -1,10 +1,26 @@
 import Chai from 'chai';
 import Config from '../../config';
 import KeyController from '../../controllers/key';
+import KeyLogic from '../../logic/key';
 import Server from '../../server';
 
 describe('KeyController', () => {
   var server;
+
+  before(function (done) {
+    this.timeout(3600000);
+
+    new KeyLogic({
+      publicKeyFile: Config.Key.PublicKeyFile,
+      privateKeyFile: Config.Key.PrivateKeyFile
+    }).ensureKeyExists()
+      .then(() => {
+        done();
+      })
+      .catch((err) => {
+        done(err);
+      });
+  });
 
   before((done) => {
     server = new Server({

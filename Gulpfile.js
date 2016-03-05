@@ -1,9 +1,19 @@
 const babel = require('gulp-babel');
 const gulp = require('gulp');
+const jsdoc = require('gulp-jsdoc3');
 const mocha = require('gulp-mocha');
 const nodemon = require('gulp-nodemon');
 
 gulp.task('default', () => {});
+
+gulp.task(
+  'generate-server-documentation',
+  (done) => {
+    gulp
+      .src('./server/**/*.js')
+      .pipe(jsdoc(done))
+  }
+)
 
 // Server /////////////////////////////////////////////////////////////////////
 
