@@ -5,11 +5,18 @@ import LibAlpaca from '../../libalpaca';
 
 export default class FileController extends BaseController {
 
+  _getLibAlpaca () {
+    return new LibAlpaca({
+      dataDir: Config.LibAlpaca.DataDir,
+      salt: Config.LibAlpaca.Salt,
+      pepper: Config.LibAlpaca.Pepper
+    });
+  }
+
   getUserDirectoryListing (request, reply) {
     const username = request.params.username;
 
-    const alpaca = new LibAlpaca(Config.LibAlpaca);
-
+    const alpaca = this._getLibAlpaca();
     alpaca.readUserFile(username)
       .then((userData) => {
 
@@ -35,7 +42,7 @@ export default class FileController extends BaseController {
     const username = request.params.username;
     const filename = request.params.filename;
 
-    const alpaca = new LibAlpaca(Config.LibAlpaca);
+    const alpaca = this._getLibAlpaca();
     alpaca.getFile(username, filename)
       .then((encryptedFile) => {
         reply({

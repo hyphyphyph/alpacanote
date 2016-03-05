@@ -43,6 +43,14 @@ const Routes = [
     handler: (request, reply) => {
       new FileController().getUserDirectoryListing(request, reply);
     }
+  },
+
+  {
+    method: 'GET',
+    path: '/file/{username}/{filename}',
+    handler: (request, reply) => {
+      new FileController().getFile(request, reply);
+    }
   }
 ];
 
