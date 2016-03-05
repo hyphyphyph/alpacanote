@@ -1,25 +1,59 @@
 const babel = require('gulp-babel');
 const gulp = require('gulp');
-const jsdoc = require('gulp-jsdoc3');
 const mocha = require('gulp-mocha');
 const nodemon = require('gulp-nodemon');
+const browserify = require('browserify');
+const source = require('vinyl-source-stream');
+const babelify = require('babelify');
 
 gulp.task('default', () => {});
 
+// Client /////////////////////////////////////////////////////////////////////
+
 gulp.task(
-  'generate-server-documentation',
-  (done) => {
-    gulp
-      .src('./server/**/*.js')
-      .pipe(jsdoc(done))
+  'copy-static-client-files',
+  () => {
+    return gulp
+      .src('./client/index.html')
+      .pipe(gulp.dest('./build/client'));
   }
 )
+
+gulp.task(
+  'build-jsx',
+  () => {
+    return browserify({
+      entries: './client/index.js',
+      debug: true,
+    })
+      .transform(babelify.configure({
+        presets: ['es2015', 'react']
+      }))
+      .bundle()
+      .pipe(source('index.js'))
+      .pipe(gulp.dest('./build/client'));
+  }
+)
+
+gulp.task(
+  'build-client',
+  [
+    'copy-static-client-files',
+    'build-jsx'
+  ],
+  (done) => {
+    done();
+  }
+);
 
 // Server /////////////////////////////////////////////////////////////////////
 
 gulp.task(
   'build-server',
-  ['build-libalpaca', 'build-libpgp'],
+  [
+    'build-libalpaca',
+    'build-libpgp'
+  ],
   () => {
     return gulp
       .src('./server/**/*.js')
