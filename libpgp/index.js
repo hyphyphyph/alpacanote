@@ -98,7 +98,6 @@ export default class LibPgp {
                     reject(err);
                   }
                   else {
-                    debugger;
                     resolve(literals[0].toString());
                   }
                 }
@@ -110,4 +109,3 @@ export default class LibPgp {
     });
   }
 }
-

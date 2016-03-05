@@ -9,6 +9,7 @@ gulp.task('default', () => {});
 
 gulp.task(
   'build-server',
+  ['build-libalpaca', 'build-libpgp'],
   () => {
     return gulp
       .src('./server/**/*.js')
@@ -16,6 +17,16 @@ gulp.task(
         presets: ['es2015']
       }))
       .pipe(gulp.dest('./build/server/'));
+  }
+);
+
+gulp.task(
+  'test-server',
+  ['build-server'],
+  () => {
+    return gulp
+      .src('./build/server/tests/**/*.js')
+      .pipe(mocha());
   }
 );
 
@@ -76,4 +87,3 @@ gulp.task(
     });
   }
 );
-

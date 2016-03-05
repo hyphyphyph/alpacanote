@@ -1,9 +1,26 @@
 import Joi from 'joi';
 
 import FileController from './controllers/file';
+import KeyController from './controllers/key';
 import UserController from './controllers/user';
 
 const Routes = [
+  {
+    method: 'GET',
+    path: '/publickey',
+    handler: (request, reply) => {
+      new KeyController().servePublicKey(request, reply);
+    }
+  },
+
+  {
+    method: 'POST',
+    path: '/encrypt',
+    handler: (request, reply) => {
+      new KeyController().encryptMessage(request, reply);
+    }
+  },
+
   {
     method: 'POST',
     path: '/user',
@@ -14,7 +31,7 @@ const Routes = [
       validate: {
         payload: {
           username: Joi.string().required(),
-          hashedPassword: Joi.string().required()
+          encryptedPassword: Joi.string().required()
         }
       }
     }
@@ -30,4 +47,3 @@ const Routes = [
 ];
 
 export default Routes;
-

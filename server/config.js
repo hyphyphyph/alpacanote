@@ -1,14 +1,13 @@
 const Config = {
   Server: {
-    Hostname: '127.0.0.1',
+    Hostname: '0.0.0.0',
     Port: 3000
   },
   LibAlpaca: {
-    dataDir: 'data',
-    salt: 'salt',
-    pepper: 'pepper'
+    DataDir: 'data',
+    Salt: 'salt',
+    Pepper: 'pepper'
   }
 };
 
 export default Config;
-
